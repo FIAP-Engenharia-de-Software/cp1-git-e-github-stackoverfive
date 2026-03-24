@@ -1,0 +1,84 @@
+{
+  "tests": [
+    {
+      "name": "Branches obrigatórias (8 branches existem)",
+      "setup": "git fetch --all",
+      "run": "ESPERADAS=(fix/imagens-cores fix/rodape fix/sobre-nos-texto feature/secao-equipe fix/menu-projetos feature/secao-contato feature/redes-sociais docs/readme); FALTANDO=0; for b in \"${ESPERADAS[@]}\"; do if ! git branch -r | grep -q \"origin/$b\"; then echo \"❌ Faltando: $b\"; FALTANDO=$((FALTANDO+1)); else echo \"✅ $b\"; fi; done; [ $FALTANDO -eq 0 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.5
+    },
+    {
+      "name": "Padrão de nomes das branches (feature/fix/hotfix/docs)",
+      "setup": "git fetch --all",
+      "run": "INVALIDAS=0; for b in $(git branch -r | grep -v HEAD | grep -v main | sed 's/ *origin\\///'); do if ! echo \"$b\" | grep -qE '^(feature|fix|hotfix|docs|style|refactor)/'; then echo \"❌ Fora do padrão: $b\"; INVALIDAS=$((INVALIDAS+1)); else echo \"✅ $b\"; fi; done; [ $INVALIDAS -eq 0 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.0
+    },
+    {
+      "name": "Conventional Commits (≥80% dos commits)",
+      "setup": "",
+      "run": "TOTAL=0; CORRETOS=0; while IFS= read -r line; do MSG=$(echo \"$line\" | cut -d' ' -f2-); if echo \"$MSG\" | grep -qiE '^Merge'; then continue; fi; TOTAL=$((TOTAL+1)); if echo \"$MSG\" | grep -qE '^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\\(.+\\))?: .+'; then CORRETOS=$((CORRETOS+1)); else echo \"❌ $line\"; fi; done <<< \"$(git log --oneline --no-merges --all)\"; echo \"$CORRETOS/$TOTAL commits no padrão\"; [ $TOTAL -gt 0 ] && [ $((CORRETOS*100/TOTAL)) -ge 80 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.5
+    },
+    {
+      "name": "Mínimo de 2 commits por branch",
+      "setup": "git fetch --all",
+      "run": "INSUF=0; for b in $(git branch -r | grep -v HEAD | grep -v main | sed 's/ *origin\\///'); do COUNT=$(git log --oneline origin/main..origin/$b --no-merges 2>/dev/null | wc -l); if [ \"$COUNT\" -lt 2 ] && [ \"$COUNT\" -gt 0 ]; then echo \"❌ $b: $COUNT commit(s)\"; INSUF=$((INSUF+1)); else echo \"✅ $b: $COUNT commits\"; fi; done; [ $INSUF -eq 0 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.0
+    },
+    {
+      "name": "Pull Requests (≥8 mergeados com descrição)",
+      "setup": "",
+      "run": "TOTAL_PRS=$(gh pr list --state all --json number,title,body,state --limit 50 | jq length); MERGED=$(gh pr list --state all --json state --limit 50 | jq '[.[] | select(.state==\"MERGED\")] | length'); SEM_DESC=$(gh pr list --state all --json body --limit 50 | jq '[.[] | select(.body==null or .body==\"\")] | length'); echo \"PRs totais: $TOTAL_PRS\"; echo \"PRs mergeados: $MERGED\"; echo \"PRs sem descrição: $SEM_DESC\"; [ \"$MERGED\" -ge 8 ] && [ \"$SEM_DESC\" -eq 0 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 2.0
+    },
+    {
+      "name": "Issues (≥5 com assignees)",
+      "setup": "",
+      "run": "TOTAL=$(gh issue list --state all --json number --limit 50 | jq length); SEM_ASSIGN=$(gh issue list --state all --json assignees --limit 50 | jq '[.[] | select(.assignees | length == 0)] | length'); echo \"Issues totais: $TOTAL\"; echo \"Sem assignee: $SEM_ASSIGN\"; [ \"$TOTAL\" -ge 5 ] && [ \"$SEM_ASSIGN\" -eq 0 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.0
+    },
+    {
+      "name": "Contribuição (≥3 membros com commits)",
+      "setup": "",
+      "run": "NUM=$(git shortlog -sn --all --no-merges | wc -l); echo \"Contribuidores: $NUM\"; [ \"$NUM\" -ge 3 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.0
+    },
+    {
+      "name": "GitHub Pages + README completo",
+      "setup": "",
+      "run": "CHECKS=0; if [ -f index.html ]; then echo '✅ index.html existe'; CHECKS=$((CHECKS+1)); else echo '❌ index.html não encontrado'; fi; if [ -f README.md ]; then echo '✅ README.md existe'; if grep -qi 'socialconnect\\|social connect\\|rede social' README.md; then echo '  ✅ Resumo do projeto'; CHECKS=$((CHECKS+1)); fi; if grep -qi 'html\\|css\\|javascript\\|tecnolog' README.md; then echo '  ✅ Tecnologias'; CHECKS=$((CHECKS+1)); fi; if grep -qi 'integrante\\|membro\\|equipe\\|grupo\\|RM\\|rm' README.md; then echo '  ✅ Integrantes'; CHECKS=$((CHECKS+1)); fi; if grep -qi 'github.io\\|pages' README.md; then echo '  ✅ Link do Pages'; CHECKS=$((CHECKS+1)); fi; else echo '❌ README.md não encontrado'; fi; echo \"Checks: $CHECKS/5\"; [ $CHECKS -ge 4 ]",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 30,
+      "points": 1.0
+    }
+  ]
+}
