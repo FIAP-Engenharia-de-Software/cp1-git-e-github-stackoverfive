@@ -4,81 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Connect</title>
-    <style>
-        body {
-            font-family: 'Open Sans',Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-        }
-
-        header {
-            background-color: #2980b9;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header img{
-            width: 20%;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        main {
-            padding: 20px;
-            min-height: 100vh;
-            margin-bottom: 150px;
-        }
-
-        section {
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        section h2 {
-            color: #333;
-        }
-
-        section p {
-            line-height: 1.6;
-        }
-
-
-        footer {
-            background-color: #2980b9;
-            color: #fff;
-            text-align: center;
-            padding: 30px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-        }
-
-        footer #socialmedia{
-            display: flex;
-            flex-direction: column;
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <header>
@@ -111,14 +37,22 @@
             <p><b>Horário de atendimento:</b> <br>Segunda a sexta (9:00 as 18:00)<br>Sábados (09:00 as 15:00)</p>
         </section>
     </main>
-    <footer>
+    <footer class="footer">
         <section>
         <p>&copy; 2026 Social Connect. Todos os direitos reservados.</p>
         </section>
         <section id="socialmedia">
-            <span>Linkedin: <a href="https://www.linkedin.com/in/nerydevloper/"> Arthur Nery</a></span>
-            <span>Linkedin: <a href="https://www.linkedin.com/in/donizetti-dev/"> Donizetti Roberto</a></span>
-            <span>Intagram: <a href="https://www.instagram.com/nsocialconnection/?hl=pt-br">Social Connection</a></span>
+            <span><a href="https://linkedin.com/" target="_blank" class="social">
+            <img src="./imagens/icons8-linkedin-logo-48.webp" alt="LinkedIn"> Arthur Nery</a>
+        </span>
+
+            <span><a href="https://linkedin.com/" target="_blank" class="social">
+        <img src="./imagens/icons8-linkedin-logo-48.webp" alt="LinkedIn"> Donizetti Roberto </a>
+        </span>
+
+        <span><a href="https://instagram.com/" target="_blank" class="social">
+        <img src="./imagens/icons8-instagram-logo-94.webp" alt="Instagram"> Socialconnect</a>
+        </span>
         </section>
     </footer>
 </body>
